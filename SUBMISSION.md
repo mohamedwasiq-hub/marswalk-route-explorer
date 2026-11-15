@@ -31,7 +31,7 @@ MarsWalk is an interactive map that helps plan an astronaut's walk across the Je
 
 ### Link to Final Project
 
-https://mohamedwasiq-hub.github.io/marswalk-route-explorer/
+https://marswalk-route-explorer.netlify.app/
 
 ### Detailed Project Description
 

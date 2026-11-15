@@ -4,6 +4,8 @@
 
 MarsWalk compares candidate astronaut walking routes across the Jezero Crater delta on Mars, using a NASA HiRISE elevation model. It shows *why* one route scores as easier than another, segment by segment, and makes its data, formula and limits visible.
 
+**Live app:** https://marswalk-route-explorer.netlify.app/
+
 > Research and education prototype. It does not certify any route as safe.
 
 ## What it does
