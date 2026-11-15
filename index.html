@@ -13,7 +13,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312100e'/%3E%3Cpath d='M5 22c5-1 6-6 11-7s6-5 11-6' fill='none' stroke='%23e2733d' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M5 27c6-1 8-5 13-6s6-3 9-4' fill='none' stroke='%23e2733d' stroke-opacity='.45' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='27' cy='9' r='2.6' fill='%23ece5db'/%3E%3C/svg%3E">
   <link rel="preload" href="vendor/fonts/fira-sans-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="vendor/leaflet.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <a class="skip" href="#analysis">Skip to route analysis</a>
@@ -53,28 +53,30 @@
       </div>
 
       <div id="site-ui">
-        <details class="panel layers" id="layers" open>
-          <summary>Layers</summary>
-          <fieldset>
-            <legend>Base map</legend>
-            <label><input type="radio" name="base" value="ortho" checked> HiRISE image</label>
-            <label><input type="radio" name="base" value="hillshade"> Hillshade</label>
-            <label><input type="radio" name="base" value="elevation"> Elevation</label>
-          </fieldset>
-          <fieldset>
-            <legend>Overlays</legend>
-            <label><input type="checkbox" id="tgl-slope" checked> Terrain slope</label>
-            <label class="range"><span>Opacity</span> <input type="range" id="slope-op" min="0" max="100" value="75" aria-label="Slope overlay opacity"></label>
-            <label><input type="checkbox" id="tgl-A" checked> <span class="sw swA"></span>Route A</label>
-            <label><input type="checkbox" id="tgl-B" checked> <span class="sw swB"></span>Route B</label>
-            <label id="lbl-C" hidden><input type="checkbox" id="tgl-C" checked> <span class="sw swC"></span>Route C, yours</label>
-            <label><input type="checkbox" id="tgl-stops" checked> <svg class="dia" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l5 5-5 5-5-5z"/></svg>Science stops</label>
-          </fieldset>
-        </details>
-
-        <details class="panel legend" id="legend-box" open>
-          <summary>Legend</summary>
-          <div id="legend"></div>
+        <details class="panel mappanel" id="layers" open>
+          <summary><span>Map layers</span></summary>
+          <div class="mp-body">
+            <fieldset>
+              <legend>Base map</legend>
+              <div class="seg" role="radiogroup" aria-label="Base map">
+                <label><input type="radio" name="base" value="ortho" checked><span>Image</span></label>
+                <label><input type="radio" name="base" value="hillshade"><span>Hillshade</span></label>
+                <label><input type="radio" name="base" value="elevation"><span>Elevation</span></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Show on map</legend>
+              <label class="chk"><input type="checkbox" id="tgl-slope" checked> Terrain slope</label>
+              <label class="range"><span>Slope opacity</span><input type="range" id="slope-op" min="0" max="100" value="75" aria-label="Slope overlay opacity"></label>
+              <label class="chk"><input type="checkbox" id="tgl-A" checked> <span class="sw swA"></span>Route A</label>
+              <label class="chk"><input type="checkbox" id="tgl-B" checked> <span class="sw swB"></span>Route B</label>
+              <label class="chk" id="lbl-C" hidden><input type="checkbox" id="tgl-C" checked> <span class="sw swC"></span>Route C (yours)</label>
+              <label class="chk"><input type="checkbox" id="tgl-stops" checked> <svg class="dia" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l5 5-5 5-5-5z"/></svg>Science stops</label>
+            </fieldset>
+            <div class="mp-legend" id="legend-box">
+              <div id="legend"></div>
+            </div>
+          </div>
         </details>
 
         <div class="scalebar" id="scalebar"><div class="bar"></div><span></span></div>
@@ -92,77 +94,92 @@
         </div>
       </div>
 
-      <div class="panel readout" id="readout" aria-live="off">Move over the map</div>
+      <div class="readout" id="readout" aria-live="off">Move over the map to read elevation and slope</div>
     </section>
 
     <aside class="sheet" id="analysis" aria-label="Route analysis" tabindex="-1">
-      <section class="sec">
-        <header class="sec-h">
-          <h2><span class="no">01</span>Compare routes</h2>
-          <span class="aside-note" id="trip"></span>
-        </header>
-        <div id="route-cards"></div>
-        <p class="note">TDI is the Terrain Difficulty Index, from 0 to 100. <strong>Lower is easier.</strong> It compares routes inside this area under the priorities below. It is not a probability of danger.</p>
-      </section>
+      <div class="sheet-tabs" role="tablist" aria-label="Route analysis">
+        <button role="tab" id="tab-compare" aria-controls="pane-compare" aria-selected="true">Compare</button>
+        <button role="tab" id="tab-inspect" aria-controls="pane-inspect" aria-selected="false" tabindex="-1">Inspect</button>
+        <button role="tab" id="tab-plan" aria-controls="pane-plan" aria-selected="false" tabindex="-1">Plan</button>
+      </div>
 
-      <section class="sec">
-        <header class="sec-h">
-          <h2><span class="no">02</span>Draw your own route</h2>
-          <span class="sw swC" aria-hidden="true"></span>
-        </header>
-        <p class="note first" id="draw-hint"></p>
-        <div class="btnrow">
-          <button class="btn primary" id="draw-start">Draw a route</button>
-          <button class="btn" id="draw-undo" hidden>Undo</button>
-          <button class="btn primary" id="draw-finish" hidden>Finish</button>
-          <button class="btn quiet" id="draw-clear" hidden>Cancel</button>
-        </div>
-      </section>
+      <!-- Compare -->
+      <div class="pane" id="pane-compare" role="tabpanel" aria-labelledby="tab-compare">
+        <section class="sec">
+          <header class="sec-h">
+            <h2>Compare routes</h2>
+            <span class="aside-note" id="trip"></span>
+          </header>
+          <p class="intro">Two ways from the crater floor to the delta top. The <strong>Terrain Difficulty Index (TDI)</strong> scores each one from 0 to 100. Lower is easier.</p>
+          <div id="route-cards"></div>
+        </section>
 
-      <section class="sec">
-        <header class="sec-h">
-          <h2><span class="no">03</span>Priorities</h2>
-          <button class="textbtn" id="reset-w">Reset</button>
-        </header>
-        <div class="weights" id="weights"></div>
-        <p class="note">Priorities change the TDI only. Measured slopes and lengths stay the same.</p>
-      </section>
+        <section class="sec">
+          <header class="sec-h">
+            <h2>What matters most?</h2>
+            <button class="textbtn" id="reset-w">Reset</button>
+          </header>
+          <div class="weights" id="weights"></div>
+          <p class="note">These change the TDI only. Measured slopes and lengths stay the same.</p>
+        </section>
+      </div>
 
-      <section class="sec">
-        <header class="sec-h">
-          <h2><span class="no">04</span>Elevation profile</h2>
-          <div class="tabs" role="tablist" id="profile-tabs" aria-label="Route shown in profile"></div>
-        </header>
-        <div class="chart"><canvas id="profile" height="170" role="img" aria-label="Elevation along the selected route, coloured by slope"></canvas><div class="tip" id="tip" hidden></div></div>
-        <p class="note">Height along the route. Line colour shows terrain slope, as in the map legend.</p>
-      </section>
+      <!-- Inspect -->
+      <div class="pane" id="pane-inspect" role="tabpanel" aria-labelledby="tab-inspect" hidden>
+        <section class="sec">
+          <header class="sec-h">
+            <h2>Elevation profile</h2>
+            <div class="tabs" role="tablist" id="profile-tabs" aria-label="Route shown in profile"></div>
+          </header>
+          <div class="chart"><canvas id="profile" height="170" role="img" aria-label="Elevation along the selected route, coloured by slope"></canvas><div class="tip" id="tip" hidden></div></div>
+          <p class="note">Height along the route. The line colour shows slope, as in the map legend.</p>
+        </section>
 
-      <section class="sec">
-        <header class="sec-h">
-          <h2><span class="no">05</span>Segment inspector</h2>
-          <span class="aside-note">click a route line</span>
-        </header>
-        <div id="inspector" class="inspector"></div>
-        <ol class="hardest" id="hardest"></ol>
-      </section>
+        <section class="sec">
+          <header class="sec-h">
+            <h2>Segment details</h2>
+            <span class="aside-note">click a route on the map</span>
+          </header>
+          <div id="inspector" class="inspector"></div>
+          <ol class="hardest" id="hardest"></ol>
+        </section>
+      </div>
 
-      <section class="sec">
-        <header class="sec-h">
-          <h2><span class="no">06</span>Route briefing</h2>
-          <span class="flag">prototype, not flight-certified</span>
-        </header>
-        <div id="briefing" class="briefing"></div>
-        <div class="btnrow">
-          <button class="btn" id="dl-json">Download JSON</button>
-          <button class="btn" id="dl-csv">Download CSV</button>
-        </div>
-      </section>
+      <!-- Plan -->
+      <div class="pane" id="pane-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
+        <section class="sec">
+          <header class="sec-h">
+            <h2>Draw your own route</h2>
+            <span class="sw swC" aria-hidden="true"></span>
+          </header>
+          <p class="note first" id="draw-hint"></p>
+          <div class="btnrow">
+            <button class="btn primary" id="draw-start">Draw a route</button>
+            <button class="btn" id="draw-undo" hidden>Undo</button>
+            <button class="btn primary" id="draw-finish" hidden>Finish</button>
+            <button class="btn quiet" id="draw-clear" hidden>Cancel</button>
+          </div>
+        </section>
 
-      <footer class="colophon">
-        <p>Terrain <code>DTEEC_002387_1985_003798_1985_A01</code>, image <code>PSP_002387_1985_RED_C_01_ORTHO</code>: NASA/JPL/University of Arizona, via the PDS and Mars ODE. Planet mosaic: NASA/USGS via Mars Trek. Place names: IAU/USGS Gazetteer.</p>
-        <p>Built for NASA Space Apps Challenge 2026, <em>Interplanetary Survival Guide: Martian Map</em>. Not endorsed by NASA.</p>
-        <p><strong>AI use:</strong> most of this app's code and text was written with an AI coding assistant (Claude), directed and reviewed by the team. No AI-generated images, video or audio are used. Every terrain number comes from the NASA HiRISE products above.</p>
-      </footer>
+        <section class="sec">
+          <header class="sec-h">
+            <h2>Route briefing</h2>
+            <span class="flag">prototype</span>
+          </header>
+          <div id="briefing" class="briefing"></div>
+          <div class="btnrow">
+            <button class="btn" id="dl-json">Download JSON</button>
+            <button class="btn" id="dl-csv">Download CSV</button>
+          </div>
+        </section>
+
+        <footer class="colophon">
+          <p>Terrain <code>DTEEC_002387_1985_003798_1985_A01</code>, image <code>PSP_002387_1985_RED_C_01_ORTHO</code>: NASA/JPL/University of Arizona, via the PDS and Mars ODE. Planet mosaic: NASA/USGS via Mars Trek. Place names: IAU/USGS Gazetteer.</p>
+          <p>Built for NASA Space Apps Challenge 2026, <em>Interplanetary Survival Guide: Martian Map</em>. Not endorsed by NASA.</p>
+          <p><strong>AI use:</strong> most of this app's code and text was written with an AI coding assistant (Claude), directed and reviewed by the team. No AI-generated images, video or audio are used. Every terrain number comes from the NASA HiRISE products above.</p>
+        </footer>
+      </div>
     </aside>
   </main>
 
@@ -221,6 +238,7 @@
   </dialog>
 
   <script src="vendor/leaflet.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=4"></script>
+  <script src="tabs.js?v=4"></script>
 </body>
 </html>
