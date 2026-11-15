@@ -135,7 +135,7 @@
   const fit = () => {
     map.invalidateSize();
     const wide = map.getSize().x >= 720;
-    map.fitBounds(bounds, wide ? { paddingTopLeft: [225, 10], paddingBottomRight: [10, 10] } : { padding: [10, 10] });
+    map.fitBounds(bounds, wide ? { paddingTopLeft: [280, 10], paddingBottomRight: [10, 10] } : { padding: [10, 10] });
   };
   if (document.getElementById("map").clientWidth < 720) {
     document.getElementById("layers").open = false;
@@ -233,7 +233,7 @@
     if (x < 0 || y < 0 || x > W || y > H) { readout.textContent = "Outside study area"; return; }
     const z = bilinear(elevAt, y / G.cell_dy_m, x / G.cell_dx_m), s = bilinear(slopeAt, y / G.cell_dy_m, x / G.cell_dx_m);
     const { lat, lon } = latLon(x, y);
-    readout.innerHTML = `<b>${lat.toFixed(5)}°N ${lon.toFixed(5)}°E</b><br>` +
+    readout.innerHTML = `<b>${lat.toFixed(5)}°N ${lon.toFixed(5)}°E</b>&ensp;·&ensp;` +
       `Elevation <b>${Number.isNaN(z) ? "no data" : z.toFixed(1) + " m"}</b> · Slope <b>${Number.isNaN(s) ? "–" : s.toFixed(1) + "°"}</b>`;
   });
   map.on("mouseout", () => { readout.textContent = "Move over the map"; });
@@ -340,6 +340,7 @@
       if (d < bd) { bd = d; bi = i; }
     }
     showSegment(id, Math.max(r.segments.findIndex(sg => bi >= sg.i0 && bi <= sg.i1), 0));
+    document.dispatchEvent(new CustomEvent("mw:segment"));
   }
 
   // ================================================================ inspector
@@ -614,7 +615,7 @@
     }
     globe.on("mousemove", e => {
       const { lat, lng } = e.latlng;
-      readout.innerHTML = Math.abs(lat) > 90 || Math.abs(lng) > 180 ? "Off the map" : `<b>${fmtLL(lat, lng)}</b><br>Planet view: no elevation here`;
+      readout.innerHTML = Math.abs(lat) > 90 || Math.abs(lng) > 180 ? "Off the map" : `<b>${fmtLL(lat, lng)}</b>&ensp;·&ensp;Planet view: no elevation here`;
     });
     globe.on("mouseout", () => { readout.textContent = "Move over the map"; });
     if (bm) document.getElementById("mars-credit").textContent = `Base map: ${bm.name}. ${bm.credit}. Place names: IAU / USGS Gazetteer.`;
