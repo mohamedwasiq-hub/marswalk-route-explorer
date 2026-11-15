@@ -1,0 +1,80 @@
+{
+  "project": "MarsWalk Route Explorer",
+  "challenge": "NASA Space Apps Challenge 2026: Interplanetary Survival Guide: Martian Map",
+  "manifest_date": "2026-11-13",
+  "study_area": {
+    "name": "Jezero Crater, western delta front",
+    "dtm_clip_rows": [4600, 8600],
+    "dtm_clip_cols": [1300, 5900],
+    "size_m": [4559, 4038],
+    "valid_data_pct": 100.0
+  },
+  "products": [
+    {
+      "role": "terrain (all quantitative results)",
+      "product_id": "DTEEC_002387_1985_003798_1985_A01",
+      "data_set_id": "MRO-M-HIRISE-5-DTM-V1.0",
+      "mission": "Mars Reconnaissance Orbiter",
+      "instrument": "HiRISE",
+      "producer": "University of Arizona (A. McEwen, N. Emami); ISIS + SOCET Set 5.6",
+      "source_images": ["PSP_002387_1985", "PSP_003798_1985"],
+      "observation_year": 2007,
+      "url": "https://hirise.lpl.arizona.edu/PDS/DTM/PSP/ORB_002300_002399/PSP_002387_1985_PSP_003798_1985/DTEEC_002387_1985_003798_1985_A01.IMG",
+      "catalog_url": "https://ode.rsl.wustl.edu/mars/indexproductpage.aspx?product_id=DTEEC_002387_1985_003798_1985_A01",
+      "file_bytes": 320045704,
+      "format": "PDS3 IMAGE, attached label, RECORD_BYTES 27736, image at record 2",
+      "grid": {"lines": 11538, "samples": 6934, "bands": 1},
+      "sample_type": "PC_REAL (float32 little-endian)",
+      "values": "elevation, metres above the Mars 2000 areoid (Smith et al. 2001); SCALING_FACTOR 1.0, OFFSET 0.0",
+      "missing_constant": "16#FF7FFFFB#",
+      "valid_range_m": [-2600.51, -2298.75],
+      "projection": {
+        "type": "EQUIRECTANGULAR",
+        "latitude_type": "PLANETOCENTRIC",
+        "longitude_direction": "EAST",
+        "sphere_radius_km": 3394.8398133163,
+        "center_latitude_deg": 15.0,
+        "center_longitude_deg": 77.41,
+        "map_resolution_pix_per_deg": 58684.96055861,
+        "map_scale_m_per_pix": 1.0096476466229,
+        "line_projection_offset": 1090880.5,
+        "sample_projection_offset": 3745.5
+      },
+      "bounds_deg": {"min_lat": 18.392143429723, "max_lat": 18.588734996352, "west_lon": 77.34394372, "east_lon": 77.466254},
+      "verified": "file size matches label; min/max match VALID_MINIMUM/VALID_MAXIMUM; see validation-results.md"
+    },
+    {
+      "role": "context image (display only, no measurements)",
+      "product_id": "PSP_002387_1985_RED_C_01_ORTHO",
+      "mission": "Mars Reconnaissance Orbiter",
+      "instrument": "HiRISE",
+      "url": "https://hirise.lpl.arizona.edu/PDS/DTM/PSP/ORB_002300_002399/PSP_002387_1985_PSP_003798_1985/PSP_002387_1985_RED_C_01_ORTHO.JP2",
+      "format": "JPEG 2000, 8-bit, CORE_NULL 0, detached label .LBL",
+      "grid": {"lines": 11538, "samples": 6934},
+      "projection": "identical to the DTM (same scale, offsets and bounds)"
+    }
+  ],
+  "processing": {
+    "reader": "numpy.fromfile, no GDAL",
+    "analysis_grid": "3x3 block mean of DTM posts (2.974 x 3.029 m); block with any missing post = missing",
+    "dx_correction": "east-west spacing = map_scale * cos(18.49 deg) / cos(15 deg) = 0.9913 m per post",
+    "slope": "arctan(|grad z|), numpy.gradient central differences, degrees",
+    "router": "A* on 6 m grid (2x2 analysis cells); step cost = distance * (1 + (slope/10)^2); slope > 25 deg blocked; path simplified with RDP tolerance 4 m",
+    "route_sampling": "every 6 m, bilinear interpolation; segments of 60 m",
+    "web_layers": "ortho.jpg (2 m/px), hillshade.jpg, elevation.jpg, slope.png (3 m/px), elev3.bin (int16 cm) and slope3.bin (uint16 0.01 deg) on the 3 m analysis grid",
+    "scripts": ["prep/dtm.py", "prep/method.py", "prep/build.py", "prep/test_method.py", "prep/sensitivity.py"]
+  },
+  "display_only_products": [
+    {"role": "whole-Mars base map", "name": "Viking MDIM 2.1 colour mosaic, 232 m/pixel", "credit": "NASA / USGS, served by NASA Mars Trek",
+     "tile_url": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+     "bundled_copy": "web/data/mars_global.jpg (zoom-3 tiles stitched by prep/global_map.py, 4096 x 2048)", "accessed": "2026-11-13"},
+    {"role": "whole-Mars landmarks", "name": "7 IAU-named features plus Jezero", "source": "IAU / USGS Gazetteer of Planetary Nomenclature", "file": "web/data/places.json", "accessed": "2026-11-13"}
+  ],
+  "reference_sources": [
+    {"use": "Belva crater name, size and centre", "source": "IAU / USGS Gazetteer of Planetary Nomenclature, Feature 15872", "url": "https://planetarynames.wr.usgs.gov/Feature/15872", "accessed": "2026-11-13"},
+    {"use": "Jezero crater size and centre", "source": "IAU / USGS Gazetteer of Planetary Nomenclature, Feature 14300", "url": "https://planetarynames.wr.usgs.gov/Feature/14300", "accessed": "2026-11-13"},
+    {"use": "Delta context", "source": "NASA/JPL Mars 2020 Perseverance landing press kit", "url": "https://www.jpl.nasa.gov/news/press_kits/mars_2020/landing/mission/landing_site/", "accessed": "2026-11-13"},
+    {"use": "Landing date and distance to delta", "source": "NASA Science: Perseverance view of the delta in Jezero Crater", "url": "https://science.nasa.gov/resource/perseverance-view-of-the-delta-in-jezero-crater/", "accessed": "2026-11-13"}
+  ],
+  "attribution": "HiRISE data: NASA/JPL/University of Arizona, via the PDS Imaging Node / HiRISE archive and Mars ODE (Washington University in St. Louis). Use does not imply NASA endorsement."
+}

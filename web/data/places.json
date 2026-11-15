@@ -1,0 +1,20 @@
+{
+  "source": "IAU / USGS Gazetteer of Planetary Nomenclature, accessed 2026-11-13. Coordinates are catalogue centres, planetocentric, east-positive.",
+  "base_url": "https://planetarynames.wr.usgs.gov/Feature/",
+  "site": {"name": "Jezero", "id": 14300, "type": "Crater", "diameter_km": 47.52, "lat": 18.41, "lon": 77.69},
+  "landmarks": [
+    {"name": "Olympus Mons", "id": 4453, "type": "Mountain", "diameter_km": 648, "lat": 18.4, "lon": -134.0},
+    {"name": "Valles Marineris", "id": 6288, "type": "Canyon system", "diameter_km": 3769, "lat": -13.74, "lon": -59.2},
+    {"name": "Elysium Mons", "id": 1783, "type": "Mountain", "diameter_km": 410, "lat": 24.74, "lon": 146.9},
+    {"name": "Gale", "id": 2071, "type": "Crater", "diameter_km": 155.3, "lat": -5.44, "lon": 137.7},
+    {"name": "Isidis Planitia", "id": 2735, "type": "Plain", "diameter_km": 1200, "lat": 12.85, "lon": 87.0},
+    {"name": "Syrtis Major Planum", "id": 5796, "type": "Plateau", "diameter_km": 1350, "lat": 8.4, "lon": 69.5, "label": "left"},
+    {"name": "Hellas Planitia", "id": 2432, "type": "Plain", "diameter_km": 2200, "lat": -42.66, "lon": 70.0, "label": "left"}
+  ],
+  "basemap": {
+    "name": "Viking MDIM 2.1 colour mosaic, 232 m/pixel",
+    "credit": "NASA / USGS, served by NASA Mars Trek",
+    "tiles": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+    "max_native_zoom": 7
+  }
+}

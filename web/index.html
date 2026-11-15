@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MarsWalk Route Explorer</title>
+  <meta name="description" content="Compare candidate Marswalk routes across the Jezero Crater delta using NASA HiRISE terrain data.">
+  <meta property="og:title" content="MarsWalk Route Explorer">
+  <meta property="og:description" content="Compare astronaut walking routes on Mars with NASA HiRISE terrain data, and see the evidence behind every score.">
+  <meta name="theme-color" content="#12100e">
+  <meta name="ai-assistance" content="Code and text written with an AI coding assistant (Claude), directed and reviewed by the team. No AI-generated images, video or audio. Terrain data: NASA HiRISE.">
+  <meta name="generator" content="Hand-directed, AI-assisted (Claude)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312100e'/%3E%3Cpath d='M5 22c5-1 6-6 11-7s6-5 11-6' fill='none' stroke='%23e2733d' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M5 27c6-1 8-5 13-6s6-3 9-4' fill='none' stroke='%23e2733d' stroke-opacity='.45' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='27' cy='9' r='2.6' fill='%23ece5db'/%3E%3C/svg%3E">
+  <link rel="preload" href="vendor/fonts/fira-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#analysis">Skip to route analysis</a>
+
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M3 21c5-1 7-6 12-7s7-5 13-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M3 27c6-1 9-5 14-6s7-3 11-4" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="27" cy="8.5" r="2.4" fill="var(--text)"/>
+      </svg>
+      <div>
+        <h1>MarsWalk</h1>
+        <p class="siteline">Jezero Crater delta <span>18.48°N 77.42°E</span> <span>HiRISE terrain, 1 m</span></p>
+      </div>
+    </div>
+
+    <div class="viewswitch" role="group" aria-label="Map view">
+      <button id="view-site" aria-pressed="true">Study site</button>
+      <button id="view-mars" aria-pressed="false">Whole Mars</button>
+    </div>
+
+    <nav class="topnav" aria-label="Help">
+      <button data-open="learn">Guide</button>
+      <button data-open="method">Data &amp; method</button>
+      <button data-open="limits" class="caution">Limitations</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="mapwrap" aria-label="Map">
+      <div id="map"></div>
+      <div id="globe" hidden></div>
+
+      <div class="veil" id="veil" role="status">
+        <div class="veil-in"><span class="pulse"></span>Loading terrain data<small>about 10 MB of NASA elevation and imagery</small></div>
+      </div>
+
+      <div id="site-ui">
+        <details class="panel layers" id="layers" open>
+          <summary>Layers</summary>
+          <fieldset>
+            <legend>Base map</legend>
+            <label><input type="radio" name="base" value="ortho" checked> HiRISE image</label>
+            <label><input type="radio" name="base" value="hillshade"> Hillshade</label>
+            <label><input type="radio" name="base" value="elevation"> Elevation</label>
+          </fieldset>
+          <fieldset>
+            <legend>Overlays</legend>
+            <label><input type="checkbox" id="tgl-slope" checked> Terrain slope</label>
+            <label class="range"><span>Opacity</span> <input type="range" id="slope-op" min="0" max="100" value="75" aria-label="Slope overlay opacity"></label>
+            <label><input type="checkbox" id="tgl-A" checked> <span class="sw swA"></span>Route A</label>
+            <label><input type="checkbox" id="tgl-B" checked> <span class="sw swB"></span>Route B</label>
+            <label id="lbl-C" hidden><input type="checkbox" id="tgl-C" checked> <span class="sw swC"></span>Route C, yours</label>
+            <label><input type="checkbox" id="tgl-stops" checked> <svg class="dia" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l5 5-5 5-5-5z"/></svg>Science stops</label>
+          </fieldset>
+        </details>
+
+        <details class="panel legend" id="legend-box" open>
+          <summary>Legend</summary>
+          <div id="legend"></div>
+        </details>
+
+        <div class="scalebar" id="scalebar"><div class="bar"></div><span></span></div>
+      </div>
+
+      <div id="mars-ui" hidden>
+        <div class="panel marsinfo">
+          <h2>Whole Mars</h2>
+          <p>The study site is a 4.6 km strip inside Jezero Crater. Route scoring needs 1 m terrain, which exists only for small mapped patches like this one, so the planet view is for orientation.</p>
+          <div class="btnrow">
+            <button class="btn primary" id="mars-fly">Fly to Jezero</button>
+            <button class="btn" id="mars-world">Whole planet</button>
+          </div>
+          <p class="credit-line" id="mars-credit"></p>
+        </div>
+      </div>
+
+      <div class="panel readout" id="readout" aria-live="off">Move over the map</div>
+    </section>
+
+    <aside class="sheet" id="analysis" aria-label="Route analysis" tabindex="-1">
+      <section class="sec">
+        <header class="sec-h">
+          <h2><span class="no">01</span>Compare routes</h2>
+          <span class="aside-note" id="trip"></span>
+        </header>
+        <div id="route-cards"></div>
+        <p class="note">TDI is the Terrain Difficulty Index, from 0 to 100. <strong>Lower is easier.</strong> It compares routes inside this area under the priorities below. It is not a probability of danger.</p>
+      </section>
+
+      <section class="sec">
+        <header class="sec-h">
+          <h2><span class="no">02</span>Draw your own route</h2>
+          <span class="sw swC" aria-hidden="true"></span>
+        </header>
+        <p class="note first" id="draw-hint"></p>
+        <div class="btnrow">
+          <button class="btn primary" id="draw-start">Draw a route</button>
+          <button class="btn" id="draw-undo" hidden>Undo</button>
+          <button class="btn primary" id="draw-finish" hidden>Finish</button>
+          <button class="btn quiet" id="draw-clear" hidden>Cancel</button>
+        </div>
+      </section>
+
+      <section class="sec">
+        <header class="sec-h">
+          <h2><span class="no">03</span>Priorities</h2>
+          <button class="textbtn" id="reset-w">Reset</button>
+        </header>
+        <div class="weights" id="weights"></div>
+        <p class="note">Priorities change the TDI only. Measured slopes and lengths stay the same.</p>
+      </section>
+
+      <section class="sec">
+        <header class="sec-h">
+          <h2><span class="no">04</span>Elevation profile</h2>
+          <div class="tabs" role="tablist" id="profile-tabs" aria-label="Route shown in profile"></div>
+        </header>
+        <div class="chart"><canvas id="profile" height="170" role="img" aria-label="Elevation along the selected route, coloured by slope"></canvas><div class="tip" id="tip" hidden></div></div>
+        <p class="note">Height along the route. Line colour shows terrain slope, as in the map legend.</p>
+      </section>
+
+      <section class="sec">
+        <header class="sec-h">
+          <h2><span class="no">05</span>Segment inspector</h2>
+          <span class="aside-note">click a route line</span>
+        </header>
+        <div id="inspector" class="inspector"></div>
+        <ol class="hardest" id="hardest"></ol>
+      </section>
+
+      <section class="sec">
+        <header class="sec-h">
+          <h2><span class="no">06</span>Route briefing</h2>
+          <span class="flag">prototype, not flight-certified</span>
+        </header>
+        <div id="briefing" class="briefing"></div>
+        <div class="btnrow">
+          <button class="btn" id="dl-json">Download JSON</button>
+          <button class="btn" id="dl-csv">Download CSV</button>
+        </div>
+      </section>
+
+      <footer class="colophon">
+        <p>Terrain <code>DTEEC_002387_1985_003798_1985_A01</code>, image <code>PSP_002387_1985_RED_C_01_ORTHO</code>: NASA/JPL/University of Arizona, via the PDS and Mars ODE. Planet mosaic: NASA/USGS via Mars Trek. Place names: IAU/USGS Gazetteer.</p>
+        <p>Built for NASA Space Apps Challenge 2026, <em>Interplanetary Survival Guide: Martian Map</em>. Not endorsed by NASA.</p>
+        <p><strong>AI use:</strong> most of this app's code and text was written with an AI coding assistant (Claude), directed and reviewed by the team. No AI-generated images, video or audio are used. Every terrain number comes from the NASA HiRISE products above.</p>
+      </footer>
+    </aside>
+  </main>
+
+  <dialog id="dlg-method" class="dlg" aria-labelledby="dlg-method-h">
+    <form method="dialog"><button class="x" aria-label="Close">&times;</button></form>
+    <h2 id="dlg-method-h">Data &amp; method</h2>
+    <div id="method-body"></div>
+  </dialog>
+
+  <dialog id="dlg-limits" class="dlg" aria-labelledby="dlg-limits-h">
+    <form method="dialog"><button class="x" aria-label="Close">&times;</button></form>
+    <h2 id="dlg-limits-h">Limitations</h2>
+    <p class="lede">MarsWalk is a research and education prototype. It does not certify any route as safe.</p>
+    <dl class="defs">
+      <dt>Terrain only</dt>
+      <dd>It looks at slope and route length. It does not model rocks smaller than the grid, loose sand, dust storms, radiation, temperature, lighting, communications, suit limits or rescue options.</dd>
+      <dt>Resolution</dt>
+      <dd>The elevation model has 1&nbsp;m posts, and slope is computed over a ~3&nbsp;m baseline. Boulders, small ledges and cracks under that size are invisible to it.</dd>
+      <dt>Illustrative thresholds</dt>
+      <dd>The 15&deg; "steep" flag and the 25&deg; no-go limit are prototype choices, not NASA EVA standards.</dd>
+      <dt>A relative score</dt>
+      <dd>The TDI compares routes within this area under the priorities you choose. It is not calibrated against real traverses and is not a probability of injury or mission failure.</dd>
+      <dt>Old observations</dt>
+      <dd>The stereo images were taken in 2007. Surface conditions are not current.</dd>
+      <dt>Elevation errors</dt>
+      <dd>HiRISE elevation models can contain artefacts, especially on very steep or shadowed slopes. We don't model this uncertainty yet.</dd>
+      <dt>One small area</dt>
+      <dd>Scoring works only inside the 4.6 &times; 4.0&nbsp;km study site. The whole-Mars view is for orientation and has no route analysis.</dd>
+      <dt>No field validation</dt>
+      <dd>Our checks test the software and the data handling (see Data &amp; method). Nothing here has been checked against a real walk on Mars.</dd>
+    </dl>
+  </dialog>
+
+  <dialog id="dlg-learn" class="dlg" aria-labelledby="dlg-learn-h">
+    <form method="dialog"><button class="x" aria-label="Close">&times;</button></form>
+    <h2 id="dlg-learn-h">Guide</h2>
+    <p class="lede">A two-minute tour of the map, for anyone new to Mars terrain data.</p>
+    <dl class="defs">
+      <dt>Where is this?</dt>
+      <dd>Jezero Crater on Mars, where NASA's Perseverance rover landed in 2021. The bright curving cliff is the front of an ancient river delta. The smooth ground to the east is the crater floor. Press <em>Whole Mars</em> to see where Jezero sits on the planet.</dd>
+      <dt>Elevation</dt>
+      <dd>Height in metres above the "Mars 2000" reference surface (Mars has no sea level). Here everything is about 2.3&ndash;2.6&nbsp;km <em>below</em> that surface, which is why the numbers are negative.</dd>
+      <dt>Slope</dt>
+      <dd>How steep the ground is, in degrees. 0&deg; is flat; 45&deg; rises one metre for every metre forward. Orange and red on the map mean steeper ground.</dd>
+      <dt>Resolution</dt>
+      <dd>Each elevation value covers about 1&nbsp;&times;&nbsp;1&nbsp;m. We average 3&nbsp;&times;&nbsp;3 of them before computing slope, to reduce noise.</dd>
+      <dt>Route A and Route B</dt>
+      <dd>Route A goes straight. Route B was found by a computer search that avoids slopes over 25&deg; and prefers gentle ground, even if the walk gets longer.</dd>
+      <dt>Terrain Difficulty Index</dt>
+      <dd>One number that mixes slope, extra distance and missing data, using the priorities you set. Change the sliders to see which route wins under different priorities.</dd>
+      <dt>Science stops</dt>
+      <dd>The diamond markers are places worth visiting. Each one shows where its information comes from and how close each route passes.</dd>
+      <dt>Try this</dt>
+      <dd>Drag "Shorter distance" all the way up. Does Route A become the easier choice? Then click the steepest part of Route A to see why it scored badly. Finally, press "Draw a route" and try to beat Route B.</dd>
+    </dl>
+  </dialog>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

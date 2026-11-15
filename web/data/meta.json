@@ -1,0 +1,111 @@
+{
+ "built": "2026-11-13",
+ "site": "Jezero Crater, western delta front",
+ "width_m": 4559.0,
+ "height_m": 4037.6,
+ "grid": {
+  "rows": 1333,
+  "cols": 1533,
+  "cell_dx_m": 2.9739,
+  "cell_dy_m": 3.0289
+ },
+ "clip_full": {
+  "row0": 4600,
+  "row1": 8600,
+  "col0": 1300,
+  "col1": 5900
+ },
+ "clip_valid_pct": 100.0,
+ "elev_range_m": [
+  -2574.03,
+  -2382.86
+ ],
+ "elev_legend_m": [
+  -2565.53,
+  -2396.35
+ ],
+ "start": {
+  "x": 4064.3,
+  "y": 2322.2,
+  "label": "Start: crater floor"
+ },
+ "goal": {
+  "x": 1883.5,
+  "y": 1716.4,
+  "label": "Destination: delta top"
+ },
+ "straight_m": 2263.4,
+ "stops": [
+  {
+   "id": "belva",
+   "name": "Belva crater",
+   "kind": "IAU-named feature",
+   "x": 737.5,
+   "y": 1798.6,
+   "text": "An impact crater about 0.9 km across on the delta. Marker is at the IAU catalogue centre (18.48\u00b0N, 77.38\u00b0E), which is given to 0.01\u00b0 (about 600 m), so treat the position as approximate.",
+   "source": "IAU / USGS Gazetteer of Planetary Nomenclature, Feature 15872",
+   "url": "https://planetarynames.wr.usgs.gov/Feature/15872"
+  },
+  {
+   "id": "scarp",
+   "name": "Delta front scarp",
+   "kind": "Observation from our terrain data + NASA context",
+   "x": 3440.0,
+   "y": 2148.8,
+   "text": "The steepest ground the direct route crosses (22.0\u00b0 in our slope grid). NASA describes the landform here as an ancient river delta, evidence that a lake once filled Jezero Crater.",
+   "source": "Slope: HiRISE DTM DTEEC_002387_1985_003798_1985_A01. Context: NASA/JPL Mars 2020 landing press kit",
+   "url": "https://www.jpl.nasa.gov/news/press_kits/mars_2020/landing/mission/landing_site/"
+  }
+ ],
+ "context": [
+  {
+   "text": "Jezero is an IAU-named crater 47.5 km across, centred at 18.41\u00b0N, 77.69\u00b0E. The study area lies inside its western part.",
+   "source": "IAU / USGS Gazetteer, Feature 14300",
+   "url": "https://planetarynames.wr.usgs.gov/Feature/14300"
+  },
+  {
+   "text": "NASA's Perseverance rover landed in Jezero Crater on 18 February 2021. NASA reports the nearest delta remnant was about 2.3 km west of the landing site. Our start point is a chosen point on the crater floor, not the landing site.",
+   "source": "NASA Science: Perseverance view of the delta",
+   "url": "https://science.nasa.gov/resource/perseverance-view-of-the-delta-in-jezero-crater/"
+  }
+ ],
+ "grid3": {
+  "rows": 1333,
+  "cols": 1533,
+  "cell_dx_m": 2.97391223388286,
+  "cell_dy_m": 3.0289429398687,
+  "zbase": -2575.0,
+  "elev": "elev3.bin int16 LE, centimetres above zbase, -32768 = no data",
+  "slope": "slope3.bin uint16 LE, hundredths of a degree, 65535 = no data"
+ },
+ "proj": {
+  "dx_full": 0.9913040779609533,
+  "dy_full": 1.0096476466229,
+  "row0": 4600,
+  "col0": 1300,
+  "map_resolution": 58684.96055861,
+  "center_lat": 15.0,
+  "center_lon": 77.41,
+  "line_offset": 1090879.5,
+  "sample_offset": 3744.5
+ },
+ "params": {
+  "analysis_block": 3,
+  "router_block": 2,
+  "sample_step_m": 6.0,
+  "segment_m": 60.0,
+  "slope_ref_deg": 25.0,
+  "steep_flag_deg": 15.0,
+  "no_go_deg": 25.0,
+  "router_slope_scale": 10.0,
+  "default_weights": {
+   "slope": 0.6,
+   "length": 0.3,
+   "coverage": 0.1
+  }
+ },
+ "sources": {
+  "dtm": "DTEEC_002387_1985_003798_1985_A01",
+  "ortho": "PSP_002387_1985_RED_C_01_ORTHO"
+ }
+}

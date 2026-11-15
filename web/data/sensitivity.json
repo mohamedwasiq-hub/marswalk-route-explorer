@@ -1,0 +1,61 @@
+{
+ "route_a_tdi": 14.2,
+ "cases": [
+  {
+   "label": "baseline",
+   "no_go": 25,
+   "scale": 10,
+   "found": true,
+   "length_m": 2529,
+   "max_slope": 14.1,
+   "mean_slope": 3.7,
+   "steep_pct": 0.0,
+   "tdi": 12.4
+  },
+  {
+   "label": "stricter no-go",
+   "no_go": 20,
+   "scale": 10,
+   "found": true,
+   "length_m": 2529,
+   "max_slope": 14.1,
+   "mean_slope": 3.7,
+   "steep_pct": 0.0,
+   "tdi": 12.4
+  },
+  {
+   "label": "looser no-go",
+   "no_go": 30,
+   "scale": 10,
+   "found": true,
+   "length_m": 2529,
+   "max_slope": 14.1,
+   "mean_slope": 3.7,
+   "steep_pct": 0.0,
+   "tdi": 12.4
+  },
+  {
+   "label": "stronger slope penalty",
+   "no_go": 25,
+   "scale": 5,
+   "found": true,
+   "length_m": 2676,
+   "max_slope": 14.6,
+   "mean_slope": 3.3,
+   "steep_pct": 0.0,
+   "tdi": 13.4
+  },
+  {
+   "label": "weaker slope penalty",
+   "no_go": 25,
+   "scale": 20,
+   "found": true,
+   "length_m": 2401,
+   "max_slope": 21.3,
+   "mean_slope": 4.3,
+   "steep_pct": 3.0,
+   "tdi": 12.1
+  }
+ ],
+ "all_cases_beat_route_a": true
+}
