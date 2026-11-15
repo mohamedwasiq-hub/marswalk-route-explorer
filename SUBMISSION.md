@@ -31,7 +31,7 @@ MarsWalk is an interactive map that helps plan an astronaut's walk across the Je
 
 ### Link to Final Project
 
-*(paste the GitHub Pages link; also put the GitHub repository link in the description)*
+https://mohamedwasiq-hub.github.io/marswalk-route-explorer/
 
 ### Detailed Project Description
 
@@ -93,7 +93,7 @@ The slope thresholds are illustrative. The elevation model is from 2007 images, 
 - JavaScript, HTML and CSS front end with Leaflet (bundled, so it works offline).
 - Hosted on GitHub Pages.
 
-**Code:** *(GitHub repository link)*
+**Code:** https://github.com/mohamedwasiq-hub/marswalk-route-explorer
 
 ### Use of Super Intelligence (SI)
 
