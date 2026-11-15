@@ -11,7 +11,7 @@ Everything below follows the official 2026 Project Submission Guide.
 | `form-fields/1-project-name.txt` to `8-...txt` | The text for each field on the Project tab, in the same order as the form. Open one, copy it all and paste it in |
 | `MarsWalk-demo-slides.pdf` | **Your Project Demo**: a 7-slide deck (the limit is 7). It shows the team name, member name, challenge, app screenshots, the user experience, and how NASA data makes it work |
 | `demo-slides/slides.html` | The source of the deck, if you want to change a word and reprint |
-| `screenshots/app-compare.png`, `app-inspect.png`, `app-plan.png` | Real screenshots of the app. The Project page accepts images (JPG, PNG or GIF, up to 10 MB each), so you can add these |
+| `screenshots/app-compare.jpg`, `app-inspect.jpg`, `app-plan.jpg` | Real screenshots of the app. The Project page accepts images (JPG, PNG or GIF, up to 10 MB each), so you can add these |
 | `team-picture/` | The team picture: the full version with the name, and a planet-only icon for round avatar slots |
 
 ## Links (all public, no login needed)
