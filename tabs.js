@@ -32,4 +32,12 @@
 
   // clicking a route on the map opens its segment details
   document.addEventListener("mw:segment", () => activate(document.getElementById("tab-inspect"), false));
+
+  // links can open a tab directly: #compare, #inspect, #plan
+  const fromHash = () => {
+    const t = document.getElementById("tab-" + location.hash.slice(1));
+    if (t && tabs.includes(t)) activate(t, false);
+  };
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
 })();
