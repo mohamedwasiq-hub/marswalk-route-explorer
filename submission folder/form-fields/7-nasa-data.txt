@@ -1,0 +1,4 @@
+- HiRISE Digital Terrain Model DTEEC_002387_1985_003798_1985_A01 (Mars Reconnaissance Orbiter; NASA/JPL/University of Arizona), from the Planetary Data System through the Mars Orbital Data Explorer. 1 m posts, elevation in metres above the Mars 2000 areoid. Every slope, climb, route and score in the app comes from this product.
+- HiRISE orthoimage PSP_002387_1985_RED_C_01_ORTHO (NASA/JPL/University of Arizona). On the same grid as the terrain model, used as the image layer.
+- Viking MDIM 2.1 colour mosaic (NASA/USGS), served by NASA Mars Trek (JPL). Used for the Whole Mars view.
+- NASA/JPL Mars 2020 Perseverance mission information about the Jezero Crater site.

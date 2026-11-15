@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MarsWalk Route Explorer: demo slides</title>
+<meta name="ai-assistance" content="Slide text and layout written with an AI coding assistant (Claude), directed and reviewed by the team. Screenshots are of the real app. No AI-generated images.">
+<style>
+@font-face { font-family: "Fira Sans"; font-weight: 400; src: url("fonts/fira-sans-400.woff2") format("woff2"); }
+@font-face { font-family: "Fira Sans"; font-weight: 500; src: url("fonts/fira-sans-500.woff2") format("woff2"); }
+@font-face { font-family: "Fira Sans"; font-weight: 600; src: url("fonts/fira-sans-600.woff2") format("woff2"); }
+@font-face { font-family: "Fira Code"; font-weight: 500; src: url("fonts/fira-code-500.woff2") format("woff2"); }
+@page { size: 1920px 1080px; margin: 0; }
+:root { --bg:#12100e; --surface:#1a1714; --raised:#24201b; --line:#3a3129; --text:#f0e9df; --muted:#b3a798; --faint:#8a7f72; --accent:#e2733d; --good:#7fd6a4; --A:#6fb0f0; --B:#58d39a; --caution:#e6b866; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); }
+body { font-family: "Fira Sans", "Segoe UI", sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.slide { width: 1920px; height: 1080px; padding: 96px 110px; position: relative; overflow: hidden; page-break-after: always; break-after: page; display: flex; flex-direction: column; }
+.slide:last-child { page-break-after: auto; break-after: auto; }
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: 104px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+h2 { font-size: 66px; font-weight: 600; letter-spacing: -.02em; line-height: 1.08; max-width: 18ch; }
+.lead { font-size: 32px; color: var(--muted); line-height: 1.4; margin-top: 26px; max-width: 34ch; }
+.foot { position: absolute; left: 110px; right: 110px; bottom: 48px; display: flex; justify-content: space-between; font-size: 22px; color: var(--faint); }
+.foot b { color: var(--accent); font-weight: 500; }
+.split { display: grid; grid-template-columns: 640px 1fr; gap: 72px; align-items: center; flex: 1; }
+.shot { width: 100%; border-radius: 18px; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,.5); display: block; }
+.steps { list-style: none; padding: 0; margin: 40px 0 0; display: grid; gap: 26px; }
+.steps li { display: grid; grid-template-columns: 56px 1fr; gap: 20px; align-items: start; font-size: 28px; line-height: 1.35; color: var(--muted); }
+.steps li b { color: var(--text); font-weight: 600; display: block; font-size: 31px; }
+.steps .n { width: 56px; height: 56px; border-radius: 50%; background: var(--raised); border: 2px solid var(--accent); color: var(--accent); display: grid; place-items: center; font-weight: 600; font-size: 26px; }
+.meta { margin-top: 56px; display: grid; gap: 16px; font-size: 28px; }
+.meta div { display: grid; grid-template-columns: 220px 1fr; gap: 20px; }
+.meta span { color: var(--faint); }
+.brandrow { display: flex; align-items: center; gap: 22px; margin-bottom: 40px; }
+.brandrow img { width: 84px; height: 84px; border-radius: 50%; }
+.brandrow p { font-size: 28px; color: var(--muted); }
+.big { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 60px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 34px 36px; }
+.card .lbl { font-size: 24px; color: var(--faint); }
+.card .vals { display: flex; gap: 34px; margin-top: 16px; align-items: baseline; }
+.card .v { font-family: "Fira Code", monospace; font-weight: 500; font-size: 58px; letter-spacing: -.03em; }
+.card .v small { display: block; font-family: "Fira Sans"; font-size: 22px; letter-spacing: 0; margin-top: 4px; }
+.va { color: var(--A); } .vb { color: var(--B); }
+.data { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 52px; }
+.data .card h3 { font-size: 32px; font-weight: 600; }
+.data .card p { font-size: 25px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
+.data .card code { font-family: "Fira Code", monospace; font-size: 20px; color: var(--caution); display: block; margin-top: 12px; }
+.checks { display: flex; gap: 28px; margin-top: 34px; }
+.checks .card { flex: 1; }
+.checks .card p { font-size: 25px; color: var(--muted); line-height: 1.4; margin-top: 8px; }
+.checks .card b { font-size: 44px; color: var(--good); font-family: "Fira Code", monospace; font-weight: 500; }
+.note { margin-top: 30px; font-size: 24px; color: var(--caution); border-left: 4px solid var(--caution); padding-left: 18px; max-width: 70ch; line-height: 1.4; }
+.future { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 50px; }
+.future .card p { font-size: 27px; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+.future .card h3 { font-size: 31px; font-weight: 600; }
+.links { margin-top: auto; display: grid; gap: 14px; font-size: 30px; padding-bottom: 40px; }
+.links div { display: grid; grid-template-columns: 200px 1fr; }
+.links span { color: var(--faint); }
+.links a { color: var(--accent); text-decoration: none; font-family: "Fira Code", monospace; font-size: 28px; }
+.hero-img { position: absolute; right: -120px; top: 120px; width: 1180px; border-radius: 22px; border: 1px solid var(--line); box-shadow: 0 40px 100px rgba(0,0,0,.6); opacity: .97; }
+.titlecol { position: relative; z-index: 1; width: 760px; margin-top: 40px; }
+.tag { display: inline-block; align-self: flex-start; font-size: 24px; color: var(--accent); border: 1.5px solid var(--accent); border-radius: 999px; padding: 6px 20px; margin-bottom: 34px; }
+</style>
+</head>
+<body>
+
+<!-- 1. Title -->
+<section class="slide">
+  <img class="hero-img" src="../screenshots/app-compare.png" alt="MarsWalk app showing two routes across Jezero Crater and the route comparison panel">
+  <div class="titlecol">
+    <div class="brandrow"><img src="red-route-lab-icon.png" alt="Red Route Lab team mark"><p>Team Red Route Lab</p></div>
+    <h1>MarsWalk Route Explorer</h1>
+    <p class="lead">Plan an astronaut's walk on Mars, and see the evidence behind every route.</p>
+    <div class="meta">
+      <div><span>Challenge</span>Interplanetary Survival Guide: Martian Map</div>
+      <div><span>Team</span>Red Route Lab</div>
+      <div><span>Members</span>Muhammad Wasiq</div>
+    </div>
+  </div>
+  <div class="foot"><span>NASA Space Apps Challenge 2026</span><span>1 / 7</span></div>
+</section>
+
+<!-- 2. Challenge -->
+<section class="slide">
+  <span class="tag">The challenge</span>
+  <h2>The first Marswalk needs a route the crew can trust.</h2>
+  <p class="lead" style="max-width:52ch">A picture of Mars shows where to go, not how steep it is. And a single "best route" label means little unless you can see the data, the method and the limits behind it.</p>
+  <div class="big">
+    <div class="card"><div class="lbl">Study site</div><div class="vals"><div class="v">4.6 × 4.0<small>km at Jezero Crater, where Perseverance explores</small></div></div></div>
+    <div class="card"><div class="lbl">Terrain detail</div><div class="vals"><div class="v">1 m<small>NASA HiRISE elevation model</small></div></div></div>
+    <div class="card"><div class="lbl">Steepest ground on the direct path</div><div class="vals"><div class="v">22.0°<small>a delta cliff in the way</small></div></div></div>
+  </div>
+  <div class="foot"><span><b>Red Route Lab</b> · MarsWalk Route Explorer</span><span>2 / 7</span></div>
+</section>
+
+<!-- 3. The app -->
+<section class="slide">
+  <span class="tag">How you use it</span>
+  <div class="split">
+    <div>
+      <h2>Compare routes. Change what matters. Draw your own.</h2>
+      <ol class="steps">
+        <li><span class="n">1</span><span><b>Compare</b>A direct route against a terrain-aware one, with one difficulty score each.</span></li>
+        <li><span class="n">2</span><span><b>Re-weigh</b>Sliders for gentle ground, distance and data coverage change the ranking live.</span></li>
+        <li><span class="n">3</span><span><b>Plan</b>Click waypoints to draw your own route. It is scored the same way.</span></li>
+      </ol>
+    </div>
+    <img class="shot" src="../screenshots/app-compare.png" alt="The Compare tab: route cards with difficulty scores and measurements">
+  </div>
+  <div class="foot"><span><b>Red Route Lab</b> · MarsWalk Route Explorer</span><span>3 / 7</span></div>
+</section>
+
+<!-- 4. Inspect -->
+<section class="slide">
+  <span class="tag">See why</span>
+  <div class="split">
+    <div>
+      <h2>Every score can be checked, stretch by stretch.</h2>
+      <ol class="steps">
+        <li><span class="n">1</span><span><b>Layers</b>HiRISE image, hillshade, elevation and slope, with a clear legend.</span></li>
+        <li><span class="n">2</span><span><b>Profile</b>Height along the route, coloured by slope and linked to the map.</span></li>
+        <li><span class="n">3</span><span><b>Details</b>Click any 60 m segment: slope, climb and the reason it scored that way.</span></li>
+      </ol>
+    </div>
+    <img class="shot" src="../screenshots/app-inspect.png" alt="The Inspect tab: elevation profile coloured by slope and the hardest stretches of the route">
+  </div>
+  <div class="foot"><span><b>Red Route Lab</b> · MarsWalk Route Explorer</span><span>4 / 7</span></div>
+</section>
+
+<!-- 5. NASA data -->
+<section class="slide">
+  <span class="tag">NASA data makes it possible</span>
+  <h2>Built directly on NASA's own Mars data.</h2>
+  <div class="data">
+    <div class="card"><h3>HiRISE elevation model</h3><p>Mars Reconnaissance Orbiter, 1 m posts. Every slope, climb and score comes from this file, read straight from the Planetary Data System.</p><code>DTEEC_002387_1985_003798_1985_A01</code></div>
+    <div class="card"><h3>HiRISE orthoimage</h3><p>The real orbital photo of the site, on the same grid as the terrain.</p><code>PSP_002387_1985_RED_C_01_ORTHO</code></div>
+    <div class="card"><h3>NASA Mars Trek, Viking mosaic</h3><p>The Whole Mars view, showing where Jezero sits on the planet.</p></div>
+    <div class="card"><h3>How we use it</h3><p>Average to a 3 m grid, correct for latitude, compute slope, then an A* search finds a path that avoids slopes over 25°.</p></div>
+  </div>
+  <div class="foot"><span><b>Red Route Lab</b> · MarsWalk Route Explorer</span><span>5 / 7</span></div>
+</section>
+
+<!-- 6. Results -->
+<section class="slide">
+  <span class="tag">What we found</span>
+  <h2>A little longer, much gentler.</h2>
+  <div class="big">
+    <div class="card"><div class="lbl">Length</div><div class="vals"><div class="v va">2.26<small>km, Route A</small></div><div class="v vb">2.53<small>km, Route B</small></div></div></div>
+    <div class="card"><div class="lbl">Steepest point</div><div class="vals"><div class="v va">22.0°<small>Route A</small></div><div class="v vb">14.1°<small>Route B</small></div></div></div>
+    <div class="card"><div class="lbl">Difficulty score (lower is easier)</div><div class="vals"><div class="v va">14.2<small>Route A</small></div><div class="v vb">12.4<small>Route B</small></div></div></div>
+  </div>
+  <div class="checks">
+    <div class="card"><b>14 / 14</b><p>automated checks pass, including values against the raw NASA file and a hand calculation</p></div>
+    <div class="card"><b>0.21°</b><p>median difference from Horn's slope method used by GIS software</p></div>
+    <div class="card"><b>5 / 5</b><p>router settings where the terrain-aware route still wins</p></div>
+  </div>
+  <p class="note">A research and education prototype. It screens terrain only (no small rocks, sand, radiation or lighting) and does not certify any route as safe.</p>
+  <div class="foot"><span><b>Red Route Lab</b> · MarsWalk Route Explorer</span><span>6 / 7</span></div>
+</section>
+
+<!-- 7. Future -->
+<section class="slide">
+  <span class="tag">What's next</span>
+  <h2>From one valley to every landing site.</h2>
+  <div class="future">
+    <div class="card"><h3>More layers</h3><p>Rock abundance, thermal inertia and radiation, including Emirates Mars Mission atmosphere data.</p></div>
+    <div class="card"><h3>More honest uncertainty</h3><p>Model elevation errors, and test the scores against Perseverance's real drive paths.</p></div>
+    <div class="card"><h3>Crew tools</h3><p>Sunlight and line-of-sight to the base, and a tablet view to carry on the walk.</p></div>
+    <div class="card"><h3>Classrooms</h3><p>Students can see how terrain shapes exploration, and try to beat the computer's route.</p></div>
+  </div>
+  <div class="links">
+    <div><span>Try it</span><a href="https://marswalk-route-explorer.netlify.app/">marswalk-route-explorer.netlify.app</a></div>
+    <div><span>Code</span><a href="https://github.com/mohamedwasiq-hub/marswalk-route-explorer">github.com/mohamedwasiq-hub/marswalk-route-explorer</a></div>
+  </div>
+  <div class="foot"><span><b>Red Route Lab</b> · Code and text written with an AI coding assistant, directed by the team. Screenshots are the real app.</span><span>7 / 7</span></div>
+</section>
+
+</body>
+</html>

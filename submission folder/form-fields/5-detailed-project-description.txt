@@ -1,0 +1,71 @@
+WHAT IT DOES
+
+MarsWalk is a web map of a 4.6 x 4.0 km area on the Jezero Crater delta front on Mars. It has three tabs.
+
+Compare:
+- Route A, a direct line, and Route B, a terrain-aware path, go from the crater floor to the delta top.
+- Each route gets a Terrain Difficulty Index (TDI) from 0 to 100, where lower is easier, plus its length, total climb, steepest point, average slope, share of ground over 15 degrees and data coverage.
+- "What matters most?" sliders (gentle terrain, shorter distance, data coverage) change the ranking live.
+
+Inspect:
+- An elevation profile coloured by slope and linked to the map.
+- Click any 60-metre segment, on the map or the profile, to see its slope, climb and a plain-language reason for its score.
+- The route's three hardest stretches are listed one click away.
+
+Plan:
+- Draw your own route (Route C) by clicking waypoints. It is scored with exactly the same method.
+- A plain-language route briefing for a crew member.
+- JSON and CSV export.
+
+On the map:
+- A HiRISE image, hillshade, elevation and terrain-slope layers, with a legend.
+- Science stops with sources.
+- A live readout of latitude, longitude, elevation and slope.
+- A Whole Mars view showing where Jezero sits on the planet.
+- Data & method, Guide and Limitations panels are always one click away.
+
+WHAT WE FOUND
+
+The direct route is 2.26 km long but crosses ground up to 22.0 degrees, with 7.4% of it steeper than 15 degrees. The terrain-aware route is 12% longer (2.53 km), but it never goes above 14.1 degrees and climbs 17 m less. With the default weights it has the lower TDI (12.4 against 14.2). If only distance matters, the direct route wins, and the app shows that openly.
+
+HOW IT WORKS
+
+We read the NASA HiRISE elevation file (PDS format) directly, average it to a 3 m grid, correct the east-west pixel spacing for latitude, and compute slope. Route B comes from an A* least-cost search that avoids slopes over 25 degrees and prefers gentle ground. Every route is sampled every 6 m. The TDI combines slope, extra distance and data gaps, using weights the user controls. It is our own prototype formula, not a NASA standard, and the app says so.
+
+HOW WE CHECKED IT
+
+14 automated checks pass:
+- test surfaces with known slopes;
+- route lengths;
+- missing-data handling;
+- values against the raw NASA file;
+- a hand calculation;
+- a comparison with Horn's method, used by GIS software (median difference 0.21 degrees).
+
+A sensitivity test showed the terrain-aware route beats the direct route under all five router settings we tried.
+
+BENEFITS AND GOALS
+
+MarsWalk makes route trade-offs visible and checkable, instead of hiding them behind one "best route" label. Planners can test their assumptions, and students can learn how terrain shapes exploration.
+
+Next we want to:
+- add rock abundance, thermal and radiation layers, including Emirates Mars Mission atmosphere data;
+- model elevation uncertainty;
+- add sunlight and line-of-sight to a base;
+- test the scores against Perseverance's real drive paths.
+
+LIMITATIONS
+
+MarsWalk is a research and education prototype. It does not certify any route as safe. It looks at terrain only. It does not cover:
+- rocks under 3 m;
+- sand or dust;
+- radiation, lighting or communications;
+- spacesuit limits.
+
+The slope thresholds are illustrative. The elevation model comes from 2007 images, and nothing has been tested in the field.
+
+TOOLS
+
+- Python 3 with NumPy (reading the NASA data, slope, routing, tests) and Pillow (images).
+- JavaScript, HTML and CSS front end with the Leaflet map library, bundled so it works offline.
+- Hosted on Netlify. Code on GitHub: https://github.com/mohamedwasiq-hub/marswalk-route-explorer

@@ -1,0 +1,15 @@
+Space Agency Partner data: none used in this version. We plan to add Emirates Mars Mission (Mohammed Bin Rashid Space Center) atmosphere and dust data as a conditions layer.
+
+Other data and references:
+- IAU/USGS Gazetteer of Planetary Nomenclature: place names and landmark positions.
+- Horn, B. K. P. (1981), "Hill shading and the reflectance map", Proceedings of the IEEE: slope method used to check our calculation.
+- University of Arizona HiRISE DTM pages (uahirise.org/dtm): product documentation.
+
+Code, tools and fonts:
+- Leaflet (BSD 2-Clause licence): interactive map library.
+- Python 3, NumPy (BSD licence) and Pillow (HPND licence): data processing.
+- Fira Sans and Fira Code fonts (SIL Open Font License).
+- Netlify (hosting) and GitHub (code).
+- Claude (AI coding assistant), as described in the SI section.
+
+All images in the app and the demo are NASA data or screenshots of our own app. No copyrighted material is used.
