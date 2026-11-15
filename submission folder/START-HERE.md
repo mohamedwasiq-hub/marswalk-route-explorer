@@ -17,11 +17,12 @@ Everything below follows the official 2026 Project Submission Guide.
 ## Links (all public, no login needed)
 
 - **Final project (live app):** https://marswalk-route-explorer.netlify.app/
-- **Demo slides:** https://github.com/mohamedwasiq-hub/marswalk-route-explorer/blob/main/submission%20folder/MarsWalk-demo-slides.pdf
+- **Demo slides:** https://marswalk-route-explorer.netlify.app/demo-slides.pdf (goes live after step 0 below)
 - **Code:** https://github.com/mohamedwasiq-hub/marswalk-route-explorer
 
 ## Step by step
 
+0. **Re-upload the site once, so the demo PDF goes live.** In Netlify, open the site **marswalk-route-explorer** and go to the **Deploys** tab. Drag the project's **`web`** folder onto the box that says "drag and drop your site output folder here". Don't make a new site. Wait for "Published", then open https://marswalk-route-explorer.netlify.app/demo-slides.pdf. You should see the 7 slides.
 1. On spaceappschallenge.org, click your profile icon, then **My Team**, then the **Project** tab, then the blue **Edit** button. Turn **Lock** ON.
 2. Check that the challenge is **Interplanetary Survival Guide: Martian Map**.
 3. Paste each field from `form-fields/`:
